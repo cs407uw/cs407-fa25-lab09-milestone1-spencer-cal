@@ -23,7 +23,7 @@ class Ball(
     private var isFirstUpdate = true
 
     init {
-        // TODO: Call reset()
+        reset()
     }
 
     /**
@@ -38,6 +38,23 @@ class Ball(
             return
         }
 
+        // Update velocity
+        val newVX = velocityX + 0.5f * (accX + xAcc) * dT
+        val newVY = velocityY + 0.5f * (accY + yAcc) * dT
+
+        // Update position
+        val dX = velocityX * dT + (1f / 6f) * dT * dT * (3f * accX + xAcc)
+        val dY = velocityY * dT + (1f / 6f) * dT * dT * (3f * accY + yAcc)
+
+        posX += dX
+        posY += dY
+
+        // Update velocity and acceleration for next iteration
+        velocityX = newVX
+        velocityY = newVY
+        accX = xAcc
+        accY = yAcc
+
     }
 
     /**
@@ -46,8 +63,35 @@ class Ball(
      * boundary should be set to 0.
      */
     fun checkBoundaries() {
-        // TODO: implement the checkBoundaries function
         // (Check all 4 walls: left, right, top, bottom)
+
+        // Check left
+        if (posX < 0f) {
+            posX = 0f
+            velocityX = 0f
+            accX = 0f
+        }
+
+        // Check right
+        if (posX + ballSize > backgroundWidth) {
+            posX = backgroundWidth - ballSize
+            velocityX = 0f
+            accX = 0f
+        }
+
+        // Check top
+        if (posY < 0f) {
+            posY = 0f
+            velocityY = 0f
+            accY = 0f
+        }
+
+        // Check bottom
+        if (posY + ballSize > backgroundHeight) {
+            posY = backgroundHeight - ballSize
+            velocityY = 0f
+            accY = 0f
+        }
     }
 
     /**
@@ -55,7 +99,13 @@ class Ball(
      * velocity and acceleration.
      */
     fun reset() {
-        // TODO: implement the reset function
         // (Reset posX, posY, velocityX, velocityY, accX, accY, isFirstUpdate)
+        posX = (backgroundWidth - ballSize) / 2f
+        posY = (backgroundHeight - ballSize) / 2f
+        velocityX = 0f
+        velocityY = 0f
+        accX = 0f
+        accY = 0f
+        isFirstUpdate = true
     }
 }
